@@ -1,120 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
-  <title>Android Code & XML Loader</title>
-  <script type="module" src="https://unpkg.com/@material/web/all.js"></script>
+  <title>Code Generator (Offline AI)</title>
   <style>
     body {
       font-family: sans-serif;
       padding: 2rem;
-      background-color: #f0f0f0;
+      background: #f0f0f0;
     }
     .container {
-      max-width: 1000px;
+      max-width: 900px;
       margin: auto;
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 1rem;
     }
     textarea, input {
-      width: 100%;
       padding: 1rem;
       font-family: monospace;
-      font-size: 14px;
       border-radius: 10px;
       border: 1px solid #ccc;
-      resize: vertical;
+      font-size: 14px;
+      width: 100%;
     }
-    h4 {
-      margin-bottom: 0;
+    textarea {
+      height: 180px;
     }
   </style>
 </head>
 <body>
-
   <div class="container">
-    <h2>Code Fetch & Convert (Java/Kotlin + XML)</h2>
+    <h2>Code Generator (Java/Kotlin + XML)</h2>
+    <input id="prompt" placeholder="مثلاً: برنامه‌ای بساز که یک دکمه داشته باشه"/>
 
-    <input id="codeUrl" placeholder="Paste Kotlin/Java code URL (raw)"/>
-    <input id="xmlUrl" placeholder="Paste XML layout URL (raw)"/>
+    <button onclick="generateCode()">Generate Code</button>
 
-    <md-filled-button onclick="loadAndConvert()">Load & Convert</md-filled-button>
+    <h4>Kotlin / Java Code:</h4>
+    <textarea id="codeOutput" readonly></textarea>
 
-    <p><strong>Detected Language:</strong> <span id="language"></span></p>
-
-    <h4>Original Code</h4>
-    <textarea id="originalCode" readonly></textarea>
-
-    <h4>Converted Code</h4>
-    <textarea id="convertedCode" readonly></textarea>
-
-    <h4>XML Layout</h4>
-    <textarea id="xmlCode" readonly></textarea>
+    <h4>XML Layout:</h4>
+    <textarea id="xmlOutput" readonly></textarea>
   </div>
 
   <script>
-    async function loadAndConvert() {
-      const codeUrl = document.getElementById("codeUrl").value;
-      const xmlUrl = document.getElementById("xmlUrl").value;
+    function generateCode() {
+      const prompt = document.getElementById("prompt").value.toLowerCase();
+      const codeBox = document.getElementById("codeOutput");
+      const xmlBox = document.getElementById("xmlOutput");
 
-      const codeArea = document.getElementById("originalCode");
-      const convertedArea = document.getElementById("convertedCode");
-      const xmlArea = document.getElementById("xmlCode");
-      const langLabel = document.getElementById("language");
+      if (prompt.includes("دکمه") || prompt.includes("button")) {
+        codeBox.value = `
+package com.example.buttonapp
 
-      codeArea.value = "Loading...";
-      xmlArea.value = "Loading...";
-      convertedArea.value = "";
-      langLabel.textContent = "";
+import android.os.Bundle
+import android.widget.Button
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 
-      try {
-        const codeRes = await fetch(codeUrl);
-        const xmlRes = await fetch(xmlUrl);
-        if (!codeRes.ok || !xmlRes.ok) throw new Error("One or both files failed to load.");
+class MainActivity : AppCompatActivity() {
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
 
-        const codeText = await codeRes.text();
-        const xmlText = await xmlRes.text();
+    val button = findViewById<Button>(R.id.myButton)
+    button.setOnClickListener {
+      Toast.makeText(this, "کلیک شد!", Toast.LENGTH_SHORT).show()
+    }
+  }
+}
+        `.trim();
 
-        codeArea.value = codeText;
-        xmlArea.value = xmlText;
+        xmlBox.value = `
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  android:gravity="center">
 
-        const lang = detectLanguage(codeText);
-        langLabel.textContent = lang;
+  <Button
+    android:id="@+id/myButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="کلیک کن" />
+</LinearLayout>
+        `.trim();
 
-        const converted = (lang === "Java") ? convertJavaToKotlin(codeText) : convertKotlinToJava(codeText);
-        convertedArea.value = converted;
-      } catch (err) {
-        codeArea.value = "Error: " + err.message;
-        xmlArea.value = "";
-        convertedArea.value = "";
+      } else if (prompt.includes("متن") || prompt.includes("textview")) {
+        codeBox.value = `
+package com.example.textapp
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
+  }
+}
+        `.trim();
+
+        xmlBox.value = `
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:gravity="center"
+  android:orientation="vertical">
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="سلام دنیا!" />
+</LinearLayout>
+        `.trim();
+      } else {
+        codeBox.value = "// درخواست ناشناس - فعلاً پشتیبانی نمی‌شود.";
+        xmlBox.value = "";
       }
     }
-
-    function detectLanguage(code) {
-      if (code.includes("System.out.println") || code.includes("public class")) return "Java";
-      if (code.includes("fun ") || code.includes("val ") || code.includes("var ")) return "Kotlin";
-      return "Unknown";
-    }
-
-    function convertJavaToKotlin(code) {
-      return code
-        .replace(/System\.out\.println/g, "println")
-        .replace(/\bString\b/g, "var")
-        .replace(/\bint\b/g, "var")
-        .replace(/public static void mainString args/g, "fun main()")
-        .replace(/;/g, "")
-        .replace(/\{/g, "{\n");
-    }
-
-    function convertKotlinToJava(code) {
-      return code
-        .replace(/\bprintln\b/g, "System.out.println")
-        .replace(/\bval\b/g, "final")
-        .replace(/\bvar\b/g, "int")
-        .replace(/fun main/g, "public static void main(String[] args)");
-    }
   </script>
-
 </body>
 </html>
