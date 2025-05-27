@@ -1,92 +1,186 @@
-<!DOCTYPE html><html lang="en" class="mdui-theme-dark">
-  <head>
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chik Chok IDE</title>
-    <link rel="stylesheet" href="https://unpkg.com/mdui@2/mdui.css">
-    <script src="https://unpkg.com/mdui@2/mdui.global.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>شکوه ایران باستان</title>
+    
+    <!-- فونت و آیکون‌ها -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Two+Tone" rel="stylesheet">
-    <link href="https://fonts.cdnfonts.com/css/space-grotesk" rel="stylesheet">
-    <link href="https://fonts.cdnfonts.com/css/dt-getai-grotesk-display" rel="stylesheet">
+
     <style>
-      html {
-        font-family: 'Space Grotesk', sans-serif;
-      }
-      html:root {
-        --mdui-color-primary: 219 198 111;
-        --mdui-color-surface-tint: 219 198 111;
-        --mdui-color-on-primary: 57 48 0;
-        --mdui-color-primary-container: 83 70 0;
-        --mdui-color-on-primary-container: 248 226 135;
-        --mdui-color-secondary: 209 198 161;
-        --mdui-color-on-secondary: 54 48 22;
-        --mdui-color-secondary-container: 78 71 42;
-        --mdui-color-on-secondary-container: 238 226 188;
-        --mdui-color-tertiary: 169 208 179;
-        --mdui-color-on-tertiary: 20 55 35;
-        --mdui-color-tertiary-container: 43 78 56;
-        --mdui-color-on-tertiary-container: 197 236 206;
-        --mdui-color-error: 255 180 171;
-        --mdui-color-on-error: 105 0 5;
-        --mdui-color-error-container: 147 0 10;
-        --mdui-color-on-error-container: 255 218 214;
-        --mdui-color-background: 21 19 11;
-        --mdui-color-on-background: 232 226 212;
-        --mdui-color-surface: 21 19 11;
-        --mdui-color-on-surface: 232 226 212;
-      }
-      .Content {
-        padding: 20px;
-      }
+        :root {
+            --gold: #FFD700;
+            --dark-bg: #1a1a1a;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Vazirmatn', sans-serif;
+            background: var(--dark-bg);
+            color: #fff;
+            scroll-behavior: smooth;
+        }
+
+        /* بخش قهرمان */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                        url('https://upload.wikimedia.org/wikipedia/commons/5/58/%DA%A9%D8%AA%DB%8C%D8%A8%D9%87_%D8%AF%D8%A7%D8%B1%DB%8C%D9%88%D8%B4_%D8%A8%DB%8C%D8%B3%D8%AA%D9%88%D9%86.jpg') center/cover fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            color: var(--gold);
+            text-shadow: 2px 2px 10px #000;
+            margin-bottom: 20px;
+            animation: fadeIn 1.5s ease;
+        }
+
+        /* کارت‌های تصویری */
+        .historical-cards {
+            padding: 50px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .history-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .history-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card-image {
+            height: 250px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .history-card:hover .card-image img {
+            transform: scale(1.05);
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-content h3 {
+            color: var(--gold);
+            margin: 0 0 10px 0;
+            font-size: 1.4em;
+        }
+
+        footer {
+            background: #000;
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+            color: #666;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <header>
-      <mdui-top-app-bar style="position: relative;">
-        <img src="IMG_20250514_091442_373.jpg" width="40px" height="40px">
-        <div style="flex-grow: 1"></div>
-        <mdui-dropdown>
-          <mdui-button-icon slot="trigger" icon="more_vert"></mdui-button-icon>
-          <mdui-menu>
-            <mdui-menu-item onclick="window.open('https://github.com/chikchok-4')">Github Repository</mdui-menu-item>
-            <mdui-menu-item onclick="window.open('https://t.me/chikchokapp')">Telegram Channel</mdui-menu-item>
-          </mdui-menu>
-        </mdui-dropdown>
-      </mdui-top-app-bar>
-    </header><div class="Content">
-  <h1 style="text-align: center;">Code Generator (Offline)</h1>
-  <hr width="120px" style="margin-bottom: 20px;">
-  <mdui-card variant="elevated" style="padding: 20px; margin: 10px;">
-    <mdui-text-field id="codeInput" label="توضیح بده چی می‌خوای (مثلاً دکمه در کاتلین)" variant="outlined"></mdui-text-field>
-    <mdui-button onclick="generateCode()" icon="bolt" variant="filled" style="margin-top: 10px;">
-      ساخت کد
-    </mdui-button>
-    <mdui-textarea id="codeOutput" label="کد تولید شده" rows="10" readonly variant="outlined" style="margin-top: 15px;"></mdui-textarea>
-  </mdui-card>
-</div>
+</head>
+<body>
 
-<script>
-  const codeSnippets = {
-    "دکمه در کاتلین": `val button = Button(this).apply {\n    text = \"Click Me\"\n    setOnClickListener {\n        Toast.makeText(context, \"Clicked!\", Toast.LENGTH_SHORT).show()\n    }\n}`,
-    "کلاس در جاوا": `public class MyClass {\n    private String name;\n\n    public MyClass(String name) {\n        this.name = name;\n    }\n\n    public void printName() {\n        System.out.println(name);\n    }\n}`,
-    "تکست ویو در xml": `<TextView\n    android:layout_width=\"wrap_content\"\n    android:layout_height=\"wrap_content\"\n    android:text=\"Hello World!\"\n    android:textSize=\"18sp\"/>`
-  };
+    <section class="hero">
+        <div class="hero-content">
+            <h1>تمدن جاودان ایران</h1>
+            <p>از کوروش تا امروز، همیشه ماندگار</p>
+        </div>
+    </section>
 
-  function generateCode() {
-    const input = document.getElementById('codeInput').value.trim();
-    const output = document.getElementById('codeOutput');
-    const matchedKey = Object.keys(codeSnippets).find(k => input.includes(k));
-    output.value = matchedKey ? codeSnippets[matchedKey] : 'کدی برای این ورودی پیدا نشد!';
-  }
-</script>
+    <div class="historical-cards">
+        <div class="cards-grid">
+            <!-- کارت تخت جمشید -->
+            <div class="history-card">
+                <div class="card-image">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/f6/The_Milky_Way_over_the_Hall_of_Mirrors%28Tachar_Palace%29.jpg" alt="تخت جمشید">
+                </div>
+                <div class="card-content">
+                    <h3>تالار تچر</h3>
+                    <p>شاهکار معماری هخامنشی با ستون‌های بلند و نقوش برجسته</p>
+                </div>
+            </div>
 
-<footer style="margin: 30px; text-align: center;">
-  This Website is Made by skinvent for Github repository Of ChikChok
-</footer>
+            <!-- کارت کوروش بزرگ -->
+            <div class="history-card">
+                <div class="card-image">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/06/Iran_-_Pasargad_-_The_great_Cyrus_Tomb_-_%D8%A2%D8%B1%D8%A7%D9%85%DA%AF%D8%A7%D9%87_%DA%A9%D9%88%D8%B1%D9%88%D8%B4_%DA%A9%D8%A8%DB%8C%D8%B1_-_panoramio.jpg" alt="کوروش بزرگ">
+                </div>
+                <div class="card-content">
+                    <h3>کوروش کبیر</h3>
+                    <p>بنیانگذار نخستین امپراتوری جهانی و صادرکننده منشور حقوق بشر</p>
+                </div>
+            </div>
 
-  </body>
+            <!-- کارت پاسارگاد -->
+            <div class="history-card">
+                <div class="card-image">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/%D8%BA%D8%B1%D9%88%D8%A8_%D8%AA%D8%AE%D8%AA_%D8%AC%D9%85%D8%B4%DB%8C%D8%AF_%D8%B9%DA%A9%D8%B3.jpg" alt="پاسارگاد">
+                </div>
+                <div class="card-content">
+                    <h3>آرامگاه کوروش</h3>
+                    <p>نماد سادگی و عظمت در پاسارگاد، اولین پایتخت هخامنشیان</p>
+                </div>
+            </div>
+
+            <!-- کارت بیستون -->
+            <div class="history-card">
+                <div class="card-image">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/58/%DA%A9%D8%AA%DB%8C%D8%A8%D9%87_%D8%AF%D8%A7%D8%B1%DB%8C%D9%88%D8%B4_%D8%A8%DB%8C%D8%B3%D8%AA%D9%88%D9%86.jpg" alt="کتیبه بیستون">
+                </div>
+                <div class="card-content">
+                    <h3>کتیبه بیستون</h3>
+                    <p>سنگ‌نوشته سه زبانه داریوش بزرگ به خط میخی</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>طراحی شده با افتخار برای فرهنگ ایرانی | ۱۴۰۳</p>
+        <p>Chik CHok</p>
+    </footer>
+
+</body>
 </html>
