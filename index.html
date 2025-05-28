@@ -4,17 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>شکوه ایران باستان</title>
-    
-    <!-- فونت و آیکون‌ها -->
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
     <style>
         :root {
             --gold: #FFD700;
             --dark-bg: #1a1a1a;
         }
-
         body, html {
             margin: 0;
             padding: 0;
@@ -23,8 +19,6 @@
             color: #fff;
             scroll-behavior: smooth;
         }
-
-        /* بخش قهرمان */
         .hero {
             height: 100vh;
             background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
@@ -34,12 +28,10 @@
             justify-content: center;
             position: relative;
         }
-
         .hero-content {
             text-align: center;
             z-index: 2;
         }
-
         .hero h1 {
             font-size: 3.5rem;
             color: var(--gold);
@@ -47,20 +39,26 @@
             margin-bottom: 20px;
             animation: fadeIn 1.5s ease;
         }
-
-        /* کارت‌های تصویری */
+        .hero blockquote {
+            color: #fff;
+            font-size: 1.2em;
+            margin: 25px auto 0;
+            background: rgba(0,0,0,0.4);
+            border-right: 4px solid var(--gold);
+            padding: 15px 25px;
+            display: inline-block;
+            font-style: italic;
+        }
         .historical-cards {
             padding: 50px 20px;
             max-width: 1200px;
             margin: 0 auto;
         }
-
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
         }
-
         .history-card {
             background: rgba(255,255,255,0.05);
             border-radius: 15px;
@@ -68,38 +66,31 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
             transition: transform 0.3s ease;
         }
-
         .history-card:hover {
             transform: translateY(-10px);
         }
-
         .card-image {
             height: 250px;
             position: relative;
             overflow: hidden;
         }
-
         .card-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.3s ease;
         }
-
         .history-card:hover .card-image img {
             transform: scale(1.05);
         }
-
         .card-content {
             padding: 20px;
         }
-
         .card-content h3 {
             color: var(--gold);
             margin: 0 0 10px 0;
             font-size: 1.4em;
         }
-
         footer {
             background: #000;
             text-align: center;
@@ -107,12 +98,10 @@
             margin-top: 50px;
             color: #666;
         }
-
         @keyframes fadeIn {
             from {opacity: 0; transform: translateY(20px);}
             to {opacity: 1; transform: translateY(0);}
         }
-
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
@@ -125,7 +114,12 @@
     <section class="hero">
         <div class="hero-content">
             <h1>تمدن جاودان ایران</h1>
-            <p>از کوروش تا امروز، همیشه ماندگار</p>
+            <blockquote>
+                «به نام خداوند جان و خرد<br>
+                کزین برتر اندیشه برنگذرد»<br>
+                <span style="font-size:0.9em;color:var(--gold);">فردوسی، شاهنامه</span>
+            </blockquote>
+            <p>از کوروش تا ابوریحان، همیشه ماندگار</p>
         </div>
     </section>
 
@@ -141,7 +135,6 @@
                     <p>شاهکار معماری هخامنشی با ستون‌های بلند و نقوش برجسته</p>
                 </div>
             </div>
-
             <!-- کارت کوروش بزرگ -->
             <div class="history-card">
                 <div class="card-image">
@@ -152,7 +145,6 @@
                     <p>بنیانگذار نخستین امپراتوری جهانی و صادرکننده منشور حقوق بشر</p>
                 </div>
             </div>
-
             <!-- کارت پاسارگاد -->
             <div class="history-card">
                 <div class="card-image">
@@ -163,7 +155,6 @@
                     <p>نماد سادگی و عظمت در پاسارگاد، اولین پایتخت هخامنشیان</p>
                 </div>
             </div>
-
             <!-- کارت بیستون -->
             <div class="history-card">
                 <div class="card-image">
@@ -174,12 +165,62 @@
                     <p>سنگ‌نوشته سه زبانه داریوش بزرگ به خط میخی</p>
                 </div>
             </div>
+            <!-- کارت شاهنامه -->
+            <div class="history-card">
+                <div class="card-image">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/bf/Tomb_of_Ferdowsi_%28WLM_2015%29.jpg" alt="شاهنامه فردوسی">
+                </div>
+                <div class="card-content">
+                    <h3>شاهنامه فردوسی</h3>
+                    <p>حماسه ملی ایران و گنجینه‌ای از اسطوره‌ها، تاریخ و فرهنگ ایرانی</p>
+                </div>
+            </div>
+            <!-- کارت ابوریحان بیرونی -->
+            <div class="history-card">
+                <div class="card-image">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fb/Persian_Scholar_pavilion_in_Viena_UN_%28Biruni%29.jpg" alt="ابوریحان بیرونی">
+                </div>
+                <div class="card-content">
+                    <h3>ابوریحان بیرونی</h3>
+                    <p>دانشمند بزرگ ایرانی، ستاره‌شناس، ریاضی‌دان و جغرافی‌دان عصر طلایی اسلام</p>
+                </div>
+            </div>
         </div>
     </div>
 
     <footer>
         <p>طراحی شده با افتخار برای فرهنگ ایرانی | ۱۴۰۳</p>
-        <p>Chik CHok</p>
+    
+        <div style="margin-top:15px;font-size:1.1em;">
+            <span style="color:var(--gold);font-weight:bold;">یادگار ایران زمین</span>
+            <span style="margin:0 8px;">|</span>
+        
+            <span style="color:#fff;opacity:0.7;margin:0 8px;">
+                <i class="material-icons" style="vertical-align:middle;color:var(--gold);font-size:1.2em;">visibility</i>
+                بازدید امروز: <span id="visit-count" style="font-weight:bold;">...</span>
+            </span>
+            <script>
+                let count = localStorage.getItem('visitCount') || 0;
+                count++;
+                localStorage.setItem('visitCount', count);
+                document.getElementById('visit-count').textContent = count;
+            </script>
+            <span style="margin:0 8px;">|</span>
+            <span style="color:#fff;opacity:0.7;margin:0 8px;">
+                <i class="material-icons" style="vertical-align:middle;color:var(--gold);font-size:1.2em;">schedule</i>
+                <span id="live-clock"></span>
+            </span>
+            <script>
+                function updateClock() {
+                    const now = new Date();
+                    document.getElementById('live-clock').textContent =
+                        now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                }
+                setInterval(updateClock, 1000);
+                updateClock();
+            </script>
+            
+        </div>
     </footer>
 
 </body>
