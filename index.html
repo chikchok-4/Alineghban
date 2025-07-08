@@ -2,8 +2,8 @@
 <html lang="fa">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>سایت آزمون ریاضی کنکور</title>
+  <title>آزمون کنکور ریاضی</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
   <style>
     body {
       font-family: tahoma;
@@ -23,11 +23,15 @@
       text-align: center;
       color: #333;
     }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
     .timer {
       font-size: 24px;
       color: #e74c3c;
       text-align: center;
-      margin-bottom: 20px;
+      margin: 15px 0;
     }
     .question {
       margin: 20px 0;
@@ -37,7 +41,7 @@
       margin-bottom: 10px;
     }
     button {
-      background: #2ecc71;
+      background: #3498db;
       color: white;
       border: none;
       padding: 10px 20px;
@@ -48,63 +52,115 @@
     }
     iframe {
       width: 100%;
-      height: 500px;
-      margin-top: 20px;
+      height: 300px;
       border: 1px solid #ccc;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>آزمون ریاضی - کنکور</h1>
+    <h1>آزمون کنکور ریاضی</h1>
 
     <label>📄 آپلود فایل PDF سوالات:</label>
     <input type="file" id="pdfFile" accept=".pdf" />
+
+    <label>🎓 انتخاب پایه:</label>
+    <select id="gradeSelect" onchange="changeGrade()">
+      <option value="دهم">دهم</option>
+      <option value="یازدهم">یازدهم</option>
+      <option value="دوازدهم" selected>دوازدهم</option>
+    </select>
+
     <iframe id="pdfViewer"></iframe>
 
     <div class="timer" id="timer">20:00</div>
 
-    <div class="question" id="questionBox">
+    <div class="question" id="questionBox" style="display: none;">
       <p id="questionText">در حال بارگذاری سوال...</p>
       <div class="options" id="optionsBox"></div>
+      <button onclick="nextQuestion()">سوال بعدی</button>
     </div>
-
-    <button onclick="nextQuestion()">سوال بعدی</button>
-    <button onclick="finishExam()">پایان آزمون</button>
   </div>
 
   <script>
-    const questions = [
-      {
-        question: "حاصل عبارت (x+2)(x−3) چیست؟",
-        options: ["x² − x − 6", "x² + 5", "x² − x + 6", "x² + x − 6"],
-        correct: 0
-      },
-      {
-        question: "مشتق تابع f(x) = x³ چیست؟",
-        options: ["3x²", "x²", "3x", "x³"],
-        correct: 0
-      },
-      {
-        question: "انتگرال ∫x dx برابر است با؟",
-        options: ["x²", "x²/2 + C", "x/2 + C", "x² + C"],
-        correct: 1
-      },
-      {
-        question: "حد lim(x→0) sinx/x چیست؟",
-        options: ["0", "1", "بی‌نهایت", "وجود ندارد"],
-        correct: 1
-      },
-      {
-        question: "اگر A = {1,2,3} و B = {3,4}، اشتراک A و B چیست؟",
-        options: ["{1,2,3,4}", "{3}", "{1,2}", "{}"],
-        correct: 1
-      }
-    ];
-
+    let selectedGrade = "دوازدهم";
+    let extractedText = "";
+    let questions = [];
     let current = 0;
     let correctCount = 0;
     let wrongCount = 0;
+
+    function changeGrade() {
+      selectedGrade = document.getElementById("gradeSelect").value;
+      alert("پایه انتخاب شد: " + selectedGrade);
+    }
+
+    // PDF خواندن
+    document.getElementById("pdfFile").addEventListener("change", function(e) {
+      const file = e.target.files[0];
+      if (file && file.type === "application/pdf") {
+        const fileURL = URL.createObjectURL(file);
+        document.getElementById("pdfViewer").src = fileURL;
+        extractTextFromPDF(file);
+      }
+    });
+
+    function extractTextFromPDF(file) {
+      const fileReader = new FileReader();
+      fileReader.onload = function() {
+        const typedarray = new Uint8Array(this.result);
+        pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
+          let textPromises = [];
+          for (let i = 1; i <= pdf.numPages; i++) {
+            textPromises.push(
+              pdf.getPage(i).then(function(page) {
+                return page.getTextContent().then(function(textContent) {
+                  return textContent.items.map(item => item.str).join(" ");
+                });
+              })
+            );
+          }
+          Promise.all(textPromises).then(function(pagesText) {
+            extractedText = pagesText.join("\n");
+            parseQuestionsFromText(extractedText);
+          });
+        });
+      };
+      fileReader.readAsArrayBuffer(file);
+    }
+
+    function parseQuestionsFromText(text) {
+      questions = [];
+      const lines = text.split("\n");
+      let currentQuestion = null;
+
+      lines.forEach(line => {
+        if (/سوال\s*\d+/i.test(line)) {
+          if (currentQuestion) questions.push(currentQuestion);
+          currentQuestion = { question: line, options: [] };
+        } else if (/^[آ-ی]\)/.test(line.trim())) {
+          currentQuestion?.options.push(line.trim());
+        }
+      });
+
+      if (currentQuestion) questions.push(currentQuestion);
+      if (questions.length > 0) {
+        alert(`${questions.length} سوال از فایل استخراج شد.`);
+        startExam();
+      } else {
+        alert("سوالی یافت نشد. فایل باید شامل سوالات با فرمت مناسب باشد.");
+      }
+    }
+
+    function startExam() {
+      current = 0;
+      correctCount = 0;
+      wrongCount = 0;
+      document.getElementById("questionBox").style.display = "block";
+      showQuestion();
+      startTimer();
+    }
 
     function showQuestion() {
       const q = questions[current];
@@ -121,53 +177,46 @@
     function nextQuestion() {
       const selected = document.querySelector('input[name="option"]:checked');
       if (selected) {
-        if (parseInt(selected.value) === questions[current].correct) {
+        let guess = parseInt(selected.value);
+        let correct = 0; // چون پاسخ صحیح نداریم، فرض می‌گیریم گزینه اول درست است
+        if (guess === correct) {
           correctCount++;
         } else {
           wrongCount++;
         }
       }
+
       current++;
       if (current >= questions.length) {
         finishExam();
-        return;
+      } else {
+        showQuestion();
       }
-      showQuestion();
     }
 
     function finishExam() {
-      clearInterval(timer);
+      clearInterval(timerInterval);
       let total = correctCount + wrongCount;
-      let accuracy = correctCount / (total || 1);
-      let tazr = Math.round(accuracy * 10000); // شبیه‌سازی ساده تراز
-
-      alert(`پایان آزمون!\nتعداد درست: ${correctCount}\nتعداد غلط: ${wrongCount}\nتراز: ${tazr}`);
+      let tazr = Math.round((correctCount / (total || 1)) * 10000);
+      alert(`آزمون تمام شد!\nتعداد درست: ${correctCount}\nتعداد غلط: ${wrongCount}\nتراز: ${tazr}`);
     }
 
     // Timer
     let time = 20 * 60;
-    const timerElement = document.getElementById("timer");
-    function updateTimer() {
-      let minutes = Math.floor(time / 60);
-      let seconds = time % 60;
-      timerElement.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-      if (time <= 0) {
-        finishExam();
-      }
-      time--;
+    let timerInterval;
+    function startTimer() {
+      time = 20 * 60;
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        let minutes = Math.floor(time / 60);
+        let seconds = time % 60;
+        document.getElementById("timer").textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+        time--;
+        if (time < 0) {
+          finishExam();
+        }
+      }, 1000);
     }
-    const timer = setInterval(updateTimer, 1000);
-
-    // PDF Viewer
-    document.getElementById("pdfFile").addEventListener("change", function(e) {
-      const file = e.target.files[0];
-      if (file && file.type === "application/pdf") {
-        const fileURL = URL.createObjectURL(file);
-        document.getElementById("pdfViewer").src = fileURL;
-      }
-    });
-
-    showQuestion();
   </script>
 </body>
 </html>
